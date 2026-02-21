@@ -79,7 +79,7 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
                 {copied ? "✓ Copied!" : "📋 Copy ID"}
               </button>
               <button className="btn-secondary" onClick={copyLink}>
-                🔗 Share Link
+                🔗 Share Code
               </button>
             </div>
           </div>
@@ -170,7 +170,7 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
                   max={8}
                   value={settingsForm.maxPlayers}
                   onChange={(e) =>
-                    setSettingsForm((s) => ({ ...s, maxPlayers: Math.min(8, Math.max(2, Number(e.target.value))) }))
+                    setSettingsForm((s) => ({ ...s, maxPlayers: Math.min(8, Math.max(2, Number(e.target.valueAsNumber))) }))
                   }
                 />
               </div>
@@ -189,7 +189,7 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
                 </div>
               </div>
               <div className={styles.field2}>
-                <label>Entity Names (min 2, max 10)</label>
+                <label>Entity Names (min 2, max 8)</label>
                 <div className={styles.entityList}>
                   {settingsForm.entityNames.map((e, i) => (
                     <div key={i} className={styles.entityRow}>
@@ -208,7 +208,7 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
                       </button>
                     </div>
                   ))}
-                  {settingsForm.entityNames.length < 10 && (
+                  {settingsForm.entityNames.length < 8 && (
                     <button className={styles.addEntityBtn} onClick={addEntity}>
                       + Add Entity
                     </button>
