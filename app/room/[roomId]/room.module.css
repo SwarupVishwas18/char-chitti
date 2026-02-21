@@ -1,0 +1,90 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  font-size: 48px;
+  animation: bounce 1s infinite;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backBtn {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.backBtn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.roomInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.roomName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.roomId {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+  letter-spacing: 0.1em;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotGreen {
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
+}
+
+.dotRed {
+  background: var(--danger);
+}
+
+.errorBanner {
+  background: rgba(239,68,68,0.15);
+  border-bottom: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+  padding: 10px 16px;
+  font-size: 13px;
+  text-align: center;
+}

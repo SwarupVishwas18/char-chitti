@@ -1,143 +1,143 @@
- **Char–Chitti (चार चिठ्ठी)**
+# 🎴 Char-Chitti | चार चिठ्ठी
 
-Here’s a detailed breakdown of how it works:
-
----
-
-## 🎴 Meaning of the Name
-
-* **Char (चार)** = Four
-* **Chitti (चिठ्ठी)** = Small slip or chit
-
-So *Char–Chitti* literally means **“Four Slips.”**
-
----
-
-## 🐘 Basic Concept
-
-Each player tries to collect **four identical chits** (same animal or same title).
-The first person to do so wins.
-
-It is similar in structure to simple passing card games, but uses chits instead of playing cards.
-
----
-
-## 🧩 Materials Required
-
-* Small paper chits
-* Pen/marker
-* A bowl or container (optional)
-
----
-
-## 📝 Preparation
-
-1. Choose **animal names** (or any category like fruits, birds, cartoon characters, etc.).
-2. For each animal, write its name on **4 separate chits**.
-
-Example (for 4 players):
-
-* Lion ×4
-* Tiger ×4
-* Elephant ×4
-* Monkey ×4
-
-Total = 16 chits
-
-3. Shuffle all chits thoroughly.
-4. Distribute **4 random chits to each player**.
+A real-time multiplayer party game built with **Next.js** + **PartyKit**, deployable for free on **Vercel** + **PartyKit Cloud**.
 
 ---
 
 ## 🎮 How to Play
 
-### Step 1: Game Begins
-
-* All players sit in a circle.
-* Each player secretly checks their 4 chits.
-
-### Step 2: Passing Phase (Core Mechanic)
-
-* At the same time, each player selects **one chit** they don’t need.
-* Everyone passes that chit to the **player on their right (clockwise)**.
-* This continues continuously and quickly.
-
-⚡ Important: No stopping between passes — the flow should be smooth and fast.
+1. One player **creates a room** and sets a Room ID
+2. Others **join with the Room ID**
+3. Owner customizes **entity names** (Lion, Tiger, etc.) and **max players**
+4. Owner clicks **Start Game** — each player gets 4 random chits
+5. Players **pass one chit clockwise** per turn
+6. First to collect **4 identical chits** clicks **CLAIM WIN!**
+7. Winner gets a point — play again!
 
 ---
 
-## 🏆 Winning Condition
+## 🛠️ Tech Stack
 
-* If any player collects **4 identical chits** (for example, 4 Lions),
-
-* They immediately shout something like:
-
-  * “Char!”
-  * Or the animal name
-  * Or pre-decided code word
-
-* That player wins the round.
+| Part | Technology |
+|------|-----------|
+| Frontend | Next.js 14 (App Router) |
+| Real-time | PartyKit (WebSockets) |
+| Styling | CSS Modules |
+| Frontend Deploy | Vercel (free) |
+| Backend Deploy | PartyKit Cloud (free) |
 
 ---
 
-## 🎯 Strategy Element
+## 🚀 Setup & Local Dev
 
-Even though it seems random, strategy is involved:
+### 1. Clone & Install
+```bash
+git clone <your-repo>
+cd char-chitti
+npm install
+```
 
-* Observe what others are holding.
-* Try to predict what others are collecting.
-* Quickly discard useless chits.
-* Maintain speed to avoid giving advantage to others.
+### 2. Run locally (two terminals)
 
-Sometimes players bluff by pretending to collect something else.
+**Terminal 1 — PartyKit server:**
+```bash
+npx partykit dev
+# Runs on http://localhost:1999
+```
 
----
+**Terminal 2 — Next.js frontend:**
+```bash
+npm run dev
+# Runs on http://localhost:3000
+```
 
-## 👥 Number of Players
-
-* Minimum: 3
-* Ideal: 4–8 players
-* Can scale up by adding more animal sets.
-
----
-
-## 🔄 Variations
-
-### 1️⃣ Silent Version
-
-No talking allowed during passing.
-
-### 2️⃣ Action Version
-
-Instead of shouting, the winner performs an action (clap 4 times, tap table, etc.).
-
-### 3️⃣ Punishment Version
-
-Last person to react after winner gets a small fun task.
+Open `http://localhost:3000` and start playing!
 
 ---
 
-## 🎉 Why It’s Popular
+## 🌐 Deploy to Production (Free)
 
-* Very easy to organize
-* No equipment required
-* Works for all ages
-* Encourages speed and observation
-* Great ice-breaker game
+### Step 1: Deploy PartyKit Server
+```bash
+npx partykit login       # Login with GitHub
+npx partykit deploy      # Deploys to YOUR_USERNAME.partykit.dev
+```
+
+After deploy, note your PartyKit host: `char-chitti.YOUR_USERNAME.partykit.dev`
+
+### Step 2: Deploy Next.js to Vercel
+```bash
+npm i -g vercel
+vercel
+```
+
+When Vercel asks for environment variables, add:
+```
+NEXT_PUBLIC_PARTYKIT_HOST = char-chitti.YOUR_USERNAME.partykit.dev
+```
+
+Or go to **Vercel Dashboard → Project → Settings → Environment Variables** and add it there, then redeploy.
 
 ---
 
-## 🧠 Skills Developed
+## ⚙️ Environment Variables
 
-* Pattern recognition
-* Decision-making under pressure
-* Social awareness
-* Reaction time
+| Variable | Local | Production |
+|----------|-------|-----------|
+| `NEXT_PUBLIC_PARTYKIT_HOST` | `localhost:1999` | `char-chitti.USERNAME.partykit.dev` |
 
 ---
 
-If you want, I can also:
+## 📁 Project Structure
 
-* Formalize the rules like a board-game rulebook
-* Create a printable PDF version
-* Or design a digital app version concept (which might actually be a fun mini side-project for you 😉)
+```
+char-chitti/
+├── app/
+│   ├── page.tsx              # Home — Create or Join room
+│   ├── page.module.css
+│   ├── layout.tsx
+│   ├── globals.css
+│   └── room/[roomId]/
+│       ├── page.tsx          # Game room (dynamic route)
+│       └── room.module.css
+├── components/
+│   ├── Lobby.tsx             # Waiting room + settings editor
+│   ├── Lobby.module.css
+│   ├── GameBoard.tsx         # Active game — chit passing
+│   ├── GameBoard.module.css
+│   ├── WinnerScreen.tsx      # Winner + scoreboard
+│   └── WinnerScreen.module.css
+├── hooks/
+│   └── usePartyRoom.ts       # WebSocket hook
+├── lib/
+│   └── types.ts              # Shared types (Client + Server)
+├── party/
+│   └── index.ts              # PartyKit server (game logic)
+├── partykit.json
+├── next.config.js
+└── package.json
+```
+
+---
+
+## ✨ Features
+
+- ✅ Create room with custom Room ID (shareable)
+- ✅ Owner sets entity names (Lion, Tiger, Mango, etc.)
+- ✅ Owner sets max players (2–8)
+- ✅ Real-time player list in lobby
+- ✅ Animated chit cards — tap to select & pass
+- ✅ Server-side win validation (no cheating)
+- ✅ Persistent scoreboard across rounds
+- ✅ Play again without rejoining
+- ✅ Mobile-friendly design
+
+---
+
+## 🔧 Customization Ideas
+
+- Add **auto-pass timer** (already in settings as "Auto" mode — wire it up!)
+- Add **sound effects** on pass/win
+- Add **chat** during game
+- Add **emoji reactions**
+- Add **custom categories** (Bollywood actors, cricket teams, etc.)

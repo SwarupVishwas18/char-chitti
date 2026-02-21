@@ -1,0 +1,126 @@
+.page {
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.hero {
+  text-align: center;
+  padding: 48px 16px 32px;
+  background: linear-gradient(180deg, rgba(124,58,237,0.15) 0%, transparent 100%);
+}
+
+.emoji {
+  font-size: 64px;
+  animation: bounce 2s infinite;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f97316, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: var(--surface2);
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.tabActive {
+  background: var(--primary);
+  color: white;
+}
+
+.formArea {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.howTo {
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.howTo h3 {
+  font-size: 16px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.step span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
