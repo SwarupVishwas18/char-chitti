@@ -27,7 +27,7 @@ export interface RoomState {
   round: number;
   ownerId: string;
   playerOrder: string[]; // fixed clockwise order of player IDs
-  pendingPasses: string[]; // player IDs who have selected a chit to pass
+  currentTurnPlayerId: string | null; // whose turn it is to pass
   passRound: number; // which pass round we're on
 }
 
@@ -46,8 +46,7 @@ export type ServerMessage =
   | { type: "your_hand"; hand: string[] }
   | { type: "error"; message: string }
   | { type: "game_started" }
-  | { type: "winner"; playerId: string; playerName: string; entity: string }
-  | { type: "pass_executed"; passRound: number }; // notifies all that a round of passes happened
+  | { type: "winner"; playerId: string; playerName: string; entity: string };
 
 export const DEFAULT_ENTITIES = ["Lion", "Tiger", "Elephant", "Monkey"];
 export const DEFAULT_SETTINGS: RoomSettings = {

@@ -29,8 +29,16 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
   const players = roomState.players.filter((p) => p.isConnected);
   const myPlayer = players.find((p) => p.name === myName);
 
-  // Find the next player in clockwise order
+  // Turn logic
   const playerOrder = roomState.playerOrder || [];
+  const currentTurnPlayerId = roomState.currentTurnPlayerId;
+  const isMyTurn = myPlayer ? myPlayer.id === currentTurnPlayerId : false;
+  const currentTurnPlayer = players.find((p) => p.id === currentTurnPlayerId);
+  const currentTurnName = currentTurnPlayer
+    ? (currentTurnPlayer.name === myName ? "Your" : `${currentTurnPlayer.name}'s`)
+    : "...";
+
+  // Find who I pass to (next clockwise from me)
   const myOrderIndex = myPlayer ? playerOrder.indexOf(myPlayer.id) : -1;
   const nextPlayerId = myOrderIndex !== -1
     ? playerOrder[(myOrderIndex + 1) % playerOrder.length]
@@ -40,19 +48,13 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
     : null;
   const nextPlayerName = nextPlayer ? nextPlayer.name : "next player";
 
-  // Pending pass state
-  const pendingPasses = roomState.pendingPasses || [];
-  const iHaveSelected = myPlayer ? pendingPasses.includes(myPlayer.id) : false;
-  const totalPlayers = playerOrder.length;
-  const readyCount = pendingPasses.length;
-
   const handleSelectChit = (idx: number) => {
-    if (myHand.length !== 4) return;
+    if (!isMyTurn) return; // block if not your turn
     setSelectedChit(idx === selectedChit ? null : idx);
   };
 
   const handlePass = () => {
-    if (selectedChit === null) return;
+    if (selectedChit === null || !isMyTurn) return;
     send({ type: "pass_chit", chitIndex: selectedChit });
     setSelectedChit(null);
     setJustPassed(true);
@@ -69,39 +71,35 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
   return (
     <div className={styles.board}>
       <div className="container">
-        {/* Players overview */}
+        {/* Players overview - show turn indicator */}
         <div className={styles.playersRow}>
-          {players.map((p) => (
-            <div
-              key={p.id}
-              className={`${styles.playerPill} ${p.name === myName ? styles.mePlayer : ""}`}
-            >
-              <span className={styles.pillAvatar}>{p.name[0].toUpperCase()}</span>
-              <span className={styles.pillName}>{p.name === myName ? "You" : p.name}</span>
-              <span className={styles.pillScore}>{p.score}pts</span>
-            </div>
-          ))}
+          {players.map((p) => {
+            const isTurn = p.id === currentTurnPlayerId;
+            return (
+              <div
+                key={p.id}
+                className={`${styles.playerPill} ${p.name === myName ? styles.mePlayer : ""} ${isTurn ? styles.activeTurn : ""}`}
+              >
+                <span className={styles.pillAvatar}>{p.name[0].toUpperCase()}</span>
+                <span className={styles.pillName}>{p.name === myName ? "You" : p.name}</span>
+                <span className={styles.pillScore}>{p.score}pts</span>
+                {isTurn && <span className={styles.turnBadge}>🎯</span>}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Passing direction indicator */}
-        <div className={styles.passDirection}>
-          <span>Round {roomState.passRound || 1} — Pass to: <strong>{nextPlayerName}</strong></span>
-          <span className={styles.arrow}>⟳ Clockwise</span>
-        </div>
-
-        {/* Pass progress bar */}
-        <div className={styles.passProgress}>
-          <div className={styles.passProgressLabel}>
-            {iHaveSelected
-              ? `✅ You've selected — waiting for others (${readyCount}/${totalPlayers})`
-              : `Select a chit to pass (${readyCount}/${totalPlayers} ready)`
+        {/* Turn indicator */}
+        <div className={styles.turnIndicator}>
+          <div className={isMyTurn ? styles.myTurnBanner : styles.waitTurnBanner}>
+            {isMyTurn
+              ? `🎯 YOUR TURN — Select a chit to pass to ${nextPlayerName}`
+              : `⏳ ${currentTurnName} turn — waiting...`
             }
           </div>
-          <div className={styles.passProgressBar}>
-            <div
-              className={styles.passProgressFill}
-              style={{ width: `${(readyCount / totalPlayers) * 100}%` }}
-            />
+          <div className={styles.passDirection}>
+            <span>Round {roomState.passRound || 1}</span>
+            <span className={styles.arrow}>⟳ Clockwise</span>
           </div>
         </div>
 
@@ -119,7 +117,7 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
         <div className={styles.handSection}>
           <div className={styles.handHeader}>
             <h2>Your Hand</h2>
-            <span className={styles.handCount}>{myHand.length}/4 chits</span>
+            <span className={styles.handCount}>{myHand.length} chits</span>
           </div>
 
           {myHand.length === 0 ? (
@@ -128,12 +126,13 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
               <p>Waiting for your chits...</p>
             </div>
           ) : (
-            <div className={styles.chitGrid}>
+            <div className={`${styles.chitGrid} ${!isMyTurn ? styles.chitGridDisabled : ""}`}>
               {myHand.map((chit, idx) => (
                 <button
                   key={idx}
-                  className={`${styles.chit} ${selectedChit === idx ? styles.chitSelected : ""} ${justPassed ? styles.chitPassed : ""}`}
+                  className={`${styles.chit} ${selectedChit === idx ? styles.chitSelected : ""} ${justPassed ? styles.chitPassed : ""} ${!isMyTurn ? styles.chitDisabled : ""}`}
                   onClick={() => handleSelectChit(idx)}
+                  disabled={!isMyTurn}
                 >
                   <span className={styles.chitEmoji}>{getEmoji(chit)}</span>
                   <span className={styles.chitName}>{chit}</span>
@@ -145,7 +144,7 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
             </div>
           )}
 
-          {myHand.length > 0 && (
+          {myHand.length > 0 && isMyTurn && (
             <div className={styles.passArea}>
               {selectedChit !== null ? (
                 <button className="btn-primary" onClick={handlePass}>
@@ -156,6 +155,12 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
               )}
             </div>
           )}
+
+          {myHand.length > 0 && !isMyTurn && (
+            <div className={styles.passArea}>
+              <p className={styles.passHint}>⏳ Wait for your turn...</p>
+            </div>
+          )}
         </div>
 
         {/* Other players status */}
@@ -164,15 +169,15 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
           <div className={styles.othersList}>
             {players
               .filter((p) => p.name !== myName)
-              .map((p, i) => {
-                const hasSelected = pendingPasses.includes(p.id);
+              .map((p) => {
+                const isTurn = p.id === currentTurnPlayerId;
                 return (
-                  <div key={p.id} className={styles.otherPlayer}>
+                  <div key={p.id} className={`${styles.otherPlayer} ${isTurn ? styles.otherPlayerActive : ""}`}>
                     <div className={styles.otherAvatar}>{p.name[0].toUpperCase()}</div>
                     <div className={styles.otherInfo}>
                       <span className={styles.otherName}>{p.name}</span>
-                      <span className={hasSelected ? styles.readyBadge : styles.waitingBadge}>
-                        {hasSelected ? "✅ Ready" : "⏳ Choosing..."}
+                      <span className={isTurn ? styles.readyBadge : styles.waitingBadge}>
+                        {isTurn ? "🎯 Their turn" : "⏳ Waiting"}
                       </span>
                     </div>
                   </div>
