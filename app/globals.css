@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Fredoka:wght@300..700&family=Joti+One&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,18 +7,18 @@
 }
 
 :root {
-  --primary: #f97316;
-  --primary-dark: #ea580c;
-  --secondary: #7c3aed;
-  --bg: #0f0f1a;
-  --surface: #1a1a2e;
-  --surface2: #16213e;
-  --border: #2a2a4a;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --gold: #fbbf24;
+  --primary: #ff6b00;        /* Neon orange */
+  --primary-dark: #c2410c;   /* Deep gaming orange */
+  --secondary: #00f5ff;      /* Electric cyan */
+  --bg: #0b0f1a;             /* Deep gaming black-blue */
+  --surface: #121826;        /* Card background */
+  --surface2: #1a2238;       /* Elevated surface */
+  --border: #2e3a59;         /* Soft neon border */
+  --text: #ffffff;           /* Pure white */
+  --text-muted: #9ca3af;     /* Muted gray-blue */
+  --success: #00ff88;        /* Neon green */
+  --danger: #ff3b3b;         /* Bright red */
+  --gold: #ffd700;           /* Arcade gold */
 }
 
 html, body {
@@ -119,6 +121,10 @@ input::placeholder {
 
 h1, h2, h3 {
   line-height: 1.2;
+   font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 .text-muted {
