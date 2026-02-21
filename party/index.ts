@@ -45,6 +45,8 @@ export default class CharChittiServer implements Party.Server {
   private ownerId: string = "";
   // Pending chits to pass (player id -> chit being passed)
   private pendingPass: Map<string, string> = new Map();
+  // Fixed player order established at game start (clockwise)
+  private playerOrder: string[] = [];
 
   constructor(readonly room: Party.Room) {}
 
@@ -62,6 +64,7 @@ export default class CharChittiServer implements Party.Server {
       winnerEntity: this.winnerEntity,
       round: this.round,
       ownerId: this.ownerId,
+      playerOrder: this.playerOrder,
     };
   }
 
@@ -217,6 +220,9 @@ export default class CharChittiServer implements Party.Server {
       this.players.set(player.id, player);
     });
 
+    // Lock the player order for clockwise passing
+    this.playerOrder = playerList.map((p) => p.id);
+
     this.phase = "playing";
     this.winner = null;
     this.winnerName = null;
@@ -239,12 +245,12 @@ export default class CharChittiServer implements Party.Server {
     if (!player) return;
     if (chitIndex < 0 || chitIndex >= player.hand.length) return;
 
-    const playerList = Array.from(this.players.values()).filter(
-      (p) => p.isConnected
-    );
-    const myIndex = playerList.findIndex((p) => p.id === conn.id);
-    const nextIndex = (myIndex + 1) % playerList.length;
-    const nextPlayer = playerList[nextIndex];
+    // Use the fixed player order established at game start
+    const myIndex = this.playerOrder.indexOf(conn.id);
+    if (myIndex === -1) return;
+    const nextIndex = (myIndex + 1) % this.playerOrder.length;
+    const nextPlayer = this.players.get(this.playerOrder[nextIndex]);
+    if (!nextPlayer) return;
 
     // Remove chit from sender
     const [chitToPass] = player.hand.splice(chitIndex, 1);

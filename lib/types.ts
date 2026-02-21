@@ -26,6 +26,7 @@ export interface RoomState {
   winnerEntity: string | null;
   round: number;
   ownerId: string;
+  playerOrder: string[]; // fixed clockwise order of player IDs
 }
 
 // Messages Client → Server

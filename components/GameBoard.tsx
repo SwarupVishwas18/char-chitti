@@ -29,6 +29,17 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
   const players = roomState.players.filter((p) => p.isConnected);
   const myPlayer = players.find((p) => p.name === myName);
 
+  // Find the next player in clockwise order
+  const playerOrder = roomState.playerOrder || [];
+  const myOrderIndex = myPlayer ? playerOrder.indexOf(myPlayer.id) : -1;
+  const nextPlayerId = myOrderIndex !== -1
+    ? playerOrder[(myOrderIndex + 1) % playerOrder.length]
+    : null;
+  const nextPlayer = nextPlayerId
+    ? players.find((p) => p.id === nextPlayerId)
+    : null;
+  const nextPlayerName = nextPlayer ? nextPlayer.name : "next player";
+
   const handleSelectChit = (idx: number) => {
     if (myHand.length !== 4) return;
     setSelectedChit(idx === selectedChit ? null : idx);
@@ -116,7 +127,7 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
             <div className={styles.passArea}>
               {selectedChit !== null ? (
                 <button className="btn-primary" onClick={handlePass}>
-                  ➡️ Pass "{myHand[selectedChit]}" to next player
+                  ➡️ Pass &quot;{myHand[selectedChit]}&quot; to {nextPlayerName}
                 </button>
               ) : (
                 <p className={styles.passHint}>👆 Tap a chit to select it, then pass it</p>
