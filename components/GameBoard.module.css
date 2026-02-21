@@ -261,3 +261,46 @@
   font-size: 18px;
   opacity: 0.6;
 }
+
+/* Pass progress bar */
+.passProgress {
+  margin: 8px 0 16px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.passProgressLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.passProgressBar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.passProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--gold));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Ready/Waiting badges */
+.readyBadge {
+  font-size: 12px;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.waitingBadge {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}

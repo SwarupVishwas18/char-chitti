@@ -40,6 +40,12 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
     : null;
   const nextPlayerName = nextPlayer ? nextPlayer.name : "next player";
 
+  // Pending pass state
+  const pendingPasses = roomState.pendingPasses || [];
+  const iHaveSelected = myPlayer ? pendingPasses.includes(myPlayer.id) : false;
+  const totalPlayers = playerOrder.length;
+  const readyCount = pendingPasses.length;
+
   const handleSelectChit = (idx: number) => {
     if (myHand.length !== 4) return;
     setSelectedChit(idx === selectedChit ? null : idx);
@@ -79,8 +85,24 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
 
         {/* Passing direction indicator */}
         <div className={styles.passDirection}>
-          <span>Pass direction:</span>
+          <span>Round {roomState.passRound || 1} — Pass to: <strong>{nextPlayerName}</strong></span>
           <span className={styles.arrow}>⟳ Clockwise</span>
+        </div>
+
+        {/* Pass progress bar */}
+        <div className={styles.passProgress}>
+          <div className={styles.passProgressLabel}>
+            {iHaveSelected
+              ? `✅ You've selected — waiting for others (${readyCount}/${totalPlayers})`
+              : `Select a chit to pass (${readyCount}/${totalPlayers} ready)`
+            }
+          </div>
+          <div className={styles.passProgressBar}>
+            <div
+              className={styles.passProgressFill}
+              style={{ width: `${(readyCount / totalPlayers) * 100}%` }}
+            />
+          </div>
         </div>
 
         {/* Win button */}
@@ -142,19 +164,20 @@ export function GameBoard({ roomState, myHand, myName, send }: Props) {
           <div className={styles.othersList}>
             {players
               .filter((p) => p.name !== myName)
-              .map((p, i) => (
-                <div key={p.id} className={styles.otherPlayer}>
-                  <div className={styles.otherAvatar}>{p.name[0].toUpperCase()}</div>
-                  <div className={styles.otherInfo}>
-                    <span className={styles.otherName}>{p.name}</span>
-                    <div className={styles.otherChits}>
-                      {[0, 1, 2, 3].map((j) => (
-                        <span key={j} className={styles.hiddenChit}>🎴</span>
-                      ))}
+              .map((p, i) => {
+                const hasSelected = pendingPasses.includes(p.id);
+                return (
+                  <div key={p.id} className={styles.otherPlayer}>
+                    <div className={styles.otherAvatar}>{p.name[0].toUpperCase()}</div>
+                    <div className={styles.otherInfo}>
+                      <span className={styles.otherName}>{p.name}</span>
+                      <span className={hasSelected ? styles.readyBadge : styles.waitingBadge}>
+                        {hasSelected ? "✅ Ready" : "⏳ Choosing..."}
+                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </div>

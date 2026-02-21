@@ -43,10 +43,12 @@ export default class CharChittiServer implements Party.Server {
   private winnerEntity: string | null = null;
   private round: number = 1;
   private ownerId: string = "";
-  // Pending chits to pass (player id -> chit being passed)
-  private pendingPass: Map<string, string> = new Map();
+  // Pending chits to pass (player id -> chit index in their hand)
+  private pendingPass: Map<string, number> = new Map();
   // Fixed player order established at game start (clockwise)
   private playerOrder: string[] = [];
+  // Current pass round number
+  private passRound: number = 0;
 
   constructor(readonly room: Party.Room) {}
 
@@ -65,6 +67,8 @@ export default class CharChittiServer implements Party.Server {
       round: this.round,
       ownerId: this.ownerId,
       playerOrder: this.playerOrder,
+      pendingPasses: Array.from(this.pendingPass.keys()),
+      passRound: this.passRound,
     };
   }
 
@@ -222,6 +226,8 @@ export default class CharChittiServer implements Party.Server {
 
     // Lock the player order for clockwise passing
     this.playerOrder = playerList.map((p) => p.id);
+    this.pendingPass.clear();
+    this.passRound = 1;
 
     this.phase = "playing";
     this.winner = null;
@@ -243,26 +249,81 @@ export default class CharChittiServer implements Party.Server {
     if (this.phase !== "playing") return;
     const player = this.players.get(conn.id);
     if (!player) return;
+    if (player.hand.length !== 4) return; // must have exactly 4 to pass
     if (chitIndex < 0 || chitIndex >= player.hand.length) return;
 
-    // Use the fixed player order established at game start
-    const myIndex = this.playerOrder.indexOf(conn.id);
-    if (myIndex === -1) return;
-    const nextIndex = (myIndex + 1) % this.playerOrder.length;
-    const nextPlayer = this.players.get(this.playerOrder[nextIndex]);
-    if (!nextPlayer) return;
+    // Check player is in the game
+    if (!this.playerOrder.includes(conn.id)) return;
 
-    // Remove chit from sender
-    const [chitToPass] = player.hand.splice(chitIndex, 1);
-    // Add chit to receiver
-    nextPlayer.hand.push(chitToPass);
+    // Don't allow double-selection in the same round
+    if (this.pendingPass.has(conn.id)) {
+      // Update their selection
+      this.pendingPass.set(conn.id, chitIndex);
+      this.broadcastRoomState();
+      return;
+    }
 
-    // Send updated hands
-    const senderConn = this.room.getConnection(conn.id);
-    if (senderConn) this.sendHand(senderConn, player.hand);
+    // Record pending pass
+    this.pendingPass.set(conn.id, chitIndex);
+    this.broadcastRoomState();
 
-    const receiverConn = this.room.getConnection(nextPlayer.id);
-    if (receiverConn) this.sendHand(receiverConn, nextPlayer.hand);
+    // Check if ALL players have selected
+    const allSelected = this.playerOrder.every((pid) =>
+      this.pendingPass.has(pid)
+    );
+
+    if (allSelected) {
+      this.executePassRound();
+    }
+  }
+
+  private executePassRound() {
+    // Execute all passes simultaneously
+    // First, collect all chits being passed
+    const chitsToPass: Map<string, string> = new Map(); // senderId -> chit value
+    for (const [senderId, chitIndex] of this.pendingPass) {
+      const sender = this.players.get(senderId);
+      if (sender && chitIndex < sender.hand.length) {
+        chitsToPass.set(senderId, sender.hand[chitIndex]);
+      }
+    }
+
+    // Remove chits from senders (iterate in reverse-safe way)
+    for (const [senderId, chitIndex] of this.pendingPass) {
+      const sender = this.players.get(senderId);
+      if (sender) {
+        sender.hand.splice(chitIndex, 1);
+      }
+    }
+
+    // Add chits to receivers (clockwise: each sender's chit goes to next player)
+    for (const [senderId, chitValue] of chitsToPass) {
+      const senderIndex = this.playerOrder.indexOf(senderId);
+      const receiverIndex = (senderIndex + 1) % this.playerOrder.length;
+      const receiverId = this.playerOrder[receiverIndex];
+      const receiver = this.players.get(receiverId);
+      if (receiver) {
+        receiver.hand.push(chitValue);
+      }
+    }
+
+    // Clear pending passes and bump round
+    this.pendingPass.clear();
+    this.passRound += 1;
+
+    // Notify all clients that the pass round executed
+    const passMsg: ServerMessage = { type: "pass_executed", passRound: this.passRound };
+    this.room.broadcast(JSON.stringify(passMsg));
+
+    // Send updated hands to all players
+    for (const [connId, player] of this.players) {
+      const connection = this.room.getConnection(connId);
+      if (connection) {
+        this.sendHand(connection, player.hand);
+      }
+    }
+
+    this.broadcastRoomState();
   }
 
   private handleClaimWin(conn: Party.Connection) {
