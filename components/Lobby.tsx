@@ -14,6 +14,8 @@ interface Props {
 }
 
 export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
+
+  
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
   const [settingsForm, setSettingsForm] = useState<RoomSettings>(roomState.settings);
@@ -24,6 +26,15 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
   const shareUrl = typeof window !== "undefined"
     ? `${window.location.origin}/room/${roomId}?name=YourName`
     : "";
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = Number(e.target.value);
+
+    if (newValue < 2) newValue = 2;
+    if (newValue > 8) newValue = 8;
+
+    return newValue;
+  };
 
   const copyLink = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -170,7 +181,7 @@ export function Lobby({ roomState, roomId, myName, isOwner, send }: Props) {
                   max={8}
                   value={settingsForm.maxPlayers}
                   onChange={(e) =>
-                    setSettingsForm((s) => ({ ...s, maxPlayers: Math.min(8, Math.max(2, Number(e.target.valueAsNumber))) }))
+                    setSettingsForm((s) => ({ ...s, maxPlayers: handleChange(e) }))
                   }
                 />
               </div>

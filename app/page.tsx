@@ -31,7 +31,7 @@ export default function HomePage() {
     <div className={styles.page}>
       <div className={styles.hero}>
         <div className={styles.emoji}>🎴</div>
-        <h1 className={styles.title}>Char-Chitti1</h1>
+        <h1 className={styles.title}>Char-Chittii</h1>
         <p className={styles.subtitle}>चार चिठ्ठी · The Fast-Paced Party Game</p>
         <p className={styles.tagline}>Collect 4 matching chits before anyone else!</p>
       </div>
