@@ -1,0 +1,263 @@
+.board {
+  flex: 1;
+  padding-bottom: 40px;
+}
+
+.playersRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px 0 8px;
+  justify-content: center;
+}
+
+.playerPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 13px;
+}
+
+.mePlayer {
+  border-color: var(--primary);
+  background: rgba(249,115,22,0.1);
+}
+
+.pillAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+
+.pillName {
+  font-weight: 600;
+}
+
+.pillScore {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.passDirection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.arrow {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.winAlert {
+  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(251,191,36,0.2));
+  border: 2px solid var(--success);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  animation: winner-glow 1s infinite;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.winAlertText {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.handSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.handHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.handHeader h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.handCount {
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.waitingForDeal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  color: var(--text-muted);
+}
+
+.chitGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.chit {
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  position: relative;
+  min-height: 110px;
+  justify-content: center;
+}
+
+.chit:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.chitSelected {
+  border-color: var(--primary) !important;
+  background: rgba(249,115,22,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(249,115,22,0.3);
+}
+
+.chitPassed {
+  animation: slideRight 0.4s ease forwards;
+}
+
+@keyframes slideRight {
+  to { transform: translateX(20px); opacity: 0; }
+}
+
+.chitEmoji {
+  font-size: 36px;
+}
+
+.chitName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chitLabel {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  background: var(--primary);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.passArea {
+  text-align: center;
+}
+
+.passHint {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 12px;
+}
+
+.othersSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.othersSection h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text-muted);
+}
+
+.othersList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.otherPlayer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.otherAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.otherInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.otherName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.otherChits {
+  display: flex;
+  gap: 4px;
+}
+
+.hiddenChit {
+  font-size: 18px;
+  opacity: 0.6;
+}

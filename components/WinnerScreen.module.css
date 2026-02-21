@@ -1,0 +1,153 @@
+.screen {
+  flex: 1;
+  padding-bottom: 40px;
+  animation: fadeIn 0.4s ease;
+}
+
+.winnerCard {
+  background: linear-gradient(135deg, var(--surface), rgba(124,58,237,0.2));
+  border: 2px solid var(--secondary);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.myWin {
+  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(251,191,36,0.2));
+  border-color: var(--gold);
+  animation: winner-glow 1.5s infinite;
+}
+
+.confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+}
+
+.confettiItem {
+  font-size: 24px;
+  animation: confettiFall 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(60px) rotate(360deg); opacity: 0; }
+}
+
+.trophy {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 12px;
+  animation: bounce 1s infinite;
+}
+
+.winnerName {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.winningEntity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50px;
+  padding: 8px 20px;
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.entityEmoji {
+  font-size: 28px;
+}
+
+.entityText {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.roundInfo {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.scoreList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.winner {
+  border-color: var(--gold);
+  background: rgba(251,191,36,0.1);
+}
+
+.rank {
+  width: 30px;
+  text-align: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.scoreName {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.scorePoints {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 15px;
+}
+
+.waitingMsg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 20px;
+}
+
+.dots {
+  display: flex;
+  gap: 4px;
+}
+
+.dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: pulse 1.2s infinite;
+}
+
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
